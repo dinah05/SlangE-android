@@ -1,4 +1,4 @@
-package com.slangmap.app.presentation.home.model
+package com.slangmap.app.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

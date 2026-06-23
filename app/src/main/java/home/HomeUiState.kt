@@ -1,4 +1,6 @@
-package home
+package com.slangmap.app.presentation.home.model
 
-class HomeUiState {
-}
+data class HomeUiState(
+    val stores: List<StoreUiModel> = emptyList(),
+    val isLoading: Boolean = false,
+)
