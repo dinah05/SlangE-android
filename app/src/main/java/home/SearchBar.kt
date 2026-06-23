@@ -26,6 +26,9 @@ fun SearchBar() {
             text = it
         },
         modifier = Modifier.fillMaxWidth(),
+        label = {
+            Text("매장명, 카테고리 검색")
+        },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Search,
