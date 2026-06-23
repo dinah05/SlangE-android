@@ -1,3 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SlangMap</string>
+
+    <string name="app_name">슬랑이맵</string>
+
+    <string name="login_logo_content_description">슬랑이맵 로고</string>
+
+    <string name="login_subtitle">
+        내 주변 말랑이 &amp; 슬랑이 매장을\n지도에서 바로 찾아봐요
+    </string>
+
+    <string name="login_action_search_nearby">📍 내 주변 매장 검색</string>
+    <string name="login_action_review">📰 말랑이 리뷰</string>
+    <string name="login_action_report">✏️ 매장 정보 제보</string>
+
+    <string name="login_google_cta">Google로 시작하기</string>
+
+    <string name="login_terms_notice">
+        로그인 시 아래 약관에 동의하는 것으로 간주됩니다.
+    </string>
+    <string name="login_terms_divider">|</string>
+    <string name="login_terms_of_service">서비스 이용약관</string>
+    <string name="login_privacy_policy">개인정보처리방침</string>
+
 </resources>
