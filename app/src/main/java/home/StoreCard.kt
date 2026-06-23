@@ -53,7 +53,7 @@ fun StoreCard(
             Column {
 
                 AssistChip(
-                    onClick = {},
+                    onClick = onClick,
                     label = {
                         Text(store.category)
                     }
