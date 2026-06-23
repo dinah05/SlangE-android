@@ -13,6 +13,7 @@ import com.slangmap.app.presentation.splash.SplashScreen
 import com.slangmap.app.presentation.home.model.HomeUiState
 import com.slangmap.app.presentation.home.model.StoreUiModel
 import com.slangmap.app.ui.theme.SlangMapTheme
+import com.naver.maps.map.compose.NaverMap
 
 class MainActivity : ComponentActivity() {
 
