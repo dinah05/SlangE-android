@@ -1,22 +1,18 @@
 package com.slangmap.app.presentation.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.invisibleToUser
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,6 +67,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.weight(0.08f))
 
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedButton(
@@ -97,7 +94,11 @@ fun LoginScreen(
             Text(stringResource(R.string.login_action_report))
         }
 
-        Spacer(modifier = Modifier.weight(0.18f, fill = true).heightIn(min = 24.dp))
+        Spacer(
+            modifier = Modifier
+                .weight(0.18f, fill = true)
+                .heightIn(min = 24.dp)
+        )
 
         Button(
             onClick = onLoginClick,
@@ -106,8 +107,29 @@ fun LoginScreen(
             Text(stringResource(R.string.login_google_cta))
         }
 
-        Spacer(modifier = Modifier.weight(0.1f, fill = true).heightIn(min = 16.dp))
+        Spacer(
+            modifier = Modifier
+                .weight(0.1f, fill = true)
+                .heightIn(min = 16.dp)
+        )
 
+        TermsSection(
+            onTermsClick = onTermsClick,
+            onPrivacyPolicyClick = onPrivacyPolicyClick
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+    }
+}
+
+@Composable
+private fun TermsSection(
+    onTermsClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = stringResource(R.string.login_terms_notice),
             style = MaterialTheme.typography.bodySmall,
@@ -116,37 +138,48 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.login_terms_of_service),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .clickable(onClick = onTermsClick)
-                    .semantics { role = Role.Button }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextButton(
+                onClick = onTermsClick,
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.login_terms_of_service),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
             Text(
                 text = "|",
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.semantics { invisibleToUser() }
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = stringResource(R.string.login_privacy_policy),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .clickable(onClick = onPrivacyPolicyClick)
-                    .semantics { role = Role.Button }
-            )
-        }
 
-        Spacer(modifier = Modifier.height(40.dp))
+            TextButton(
+                onClick = onPrivacyPolicyClick,
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.login_privacy_policy),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
-@Preview(showBackground = true, fontScale = 1.5f, name = "Large font scale")
-@Preview(showBackground = true, device = "spec:width=360dp,height=480dp", name = "Small screen")
+@Preview(
+    showBackground = true,
+    fontScale = 1.5f,
+    name = "Large font scale"
+)
+@Preview(
+    showBackground = true,
+    device = "spec:width=360dp,height=480dp",
+    name = "Small screen"
+)
 @Composable
 private fun LoginScreenPreview() {
     LoginScreen(
