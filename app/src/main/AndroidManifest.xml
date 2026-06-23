@@ -11,6 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SlangMap">
 
+        <!--
+        TODO: API 키 보안 처리 필요
+        -->
+
         <meta-data
             android:name="com.naver.maps.map.NCP_KEY_ID"
             android:value="cg79t28fa6" />
@@ -23,7 +27,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 

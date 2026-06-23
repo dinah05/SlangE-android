@@ -8,12 +8,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.slangmap.app.presentation.home.HomeScreen
-import com.slangmap.app.presentation.login.LoginScreen
-import com.slangmap.app.presentation.splash.SplashScreen
 import com.slangmap.app.presentation.home.model.HomeUiState
 import com.slangmap.app.presentation.home.model.StoreUiModel
+import com.slangmap.app.presentation.login.LoginScreen
+import com.slangmap.app.presentation.splash.SplashScreen
 import com.slangmap.app.ui.theme.SlangMapTheme
-import com.naver.maps.map.compose.NaverMap
 
 class MainActivity : ComponentActivity() {
 
@@ -30,25 +29,36 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "splash"
+                    startDestination = Route.Splash
                 ) {
 
-                    composable("splash") {
+                    composable(Route.Splash) {
+
                         SplashScreen(
                             onStartClick = {
-                                navController.navigate("login")
+                                navController.navigate(
+                                    Route.Login
+                                )
                             }
                         )
                     }
 
-                    composable("login") {
+                    composable(Route.Login) {
+
                         LoginScreen(
                             isLoginInProgress = false,
                             onLoginClick = {
-                                navController.navigate("home") {
-                                    popUpTo("splash") {
+
+                                navController.navigate(
+                                    Route.Home
+                                ) {
+
+                                    popUpTo(
+                                        Route.Splash
+                                    ) {
                                         inclusive = true
                                     }
+
                                     launchSingleTop = true
                                 }
                             },
@@ -60,29 +70,14 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable("home") {
+                    composable(Route.Home) {
 
                         HomeScreen(
-                            uiState = HomeUiState(
-                                stores = listOf(
-                                    StoreUiModel(
-                                        id = 1,
-                                        name = "슬라임 팩토리",
-                                        category = "슬라임",
-                                        distance = "320m",
-                                        rating = 4.8
-                                    ),
-                                    StoreUiModel(
-                                        id = 2,
-                                        name = "문구좋아 목동점",
-                                        category = "말랑이",
-                                        distance = "890m",
-                                        rating = 4.6
-                                    )
-                                )
-                            ),
-                            onStoreClick = { storeId ->
+                            uiState = mockHomeState,
+                            onStoreClick = { _ ->
+
                                 // TODO: 매장 상세 화면 이동
+
                             }
                         )
                     }
@@ -91,3 +86,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+private object Route {
+
+    const val Splash = "splash"
+    const val Login = "login"
+    const val Home = "home"
+}
+
+//TODO: ViewModel 연결 전 임시 Mock 데이터
+private val mockHomeState = HomeUiState(
+    stores = listOf(
+        StoreUiModel(
+            id = 1L,
+            name = "슬라임 팩토리",
+            category = "슬라임",
+            distance = "320m",
+            rating = 4.8
+        ),
+        StoreUiModel(
+            id = 2L,
+            name = "문구좋아 목동점",
+            category = "말랑이",
+            distance = "890m",
+            rating = 4.6
+        )
+    )
+)

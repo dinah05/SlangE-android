@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.naver.maps.map.MapView
 import com.slangmap.app.presentation.home.model.HomeUiState
+import com.slangmap.app.presentation.home.NaverMapView
 
 private object Dimens {
 
@@ -99,7 +100,7 @@ fun HomeScreen(
                         )
                     )
 
-                    MapPlaceholder(
+                    NaverMapView(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
