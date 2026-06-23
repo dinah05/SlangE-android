@@ -44,7 +44,12 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             isLoginInProgress = false,
                             onLoginClick = {
-                                navController.navigate("home")
+                                navController.navigate("home") {
+                                    popUpTo("splash") {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
                             },
                             onSearchNearbyClick = {},
                             onReviewClick = {},
