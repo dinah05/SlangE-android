@@ -52,10 +52,19 @@ class HomeViewModel(
 
     /** 권한 요청 결과를 화면으로부터 전달받아 처리 */
     fun onLocationPermissionResult(granted: Boolean) {
-        _uiState.update { it.copy(hasLocationPermission = granted) }
 
         if (granted) {
+            _uiState.update {
+                it.copy(hasLocationPermission = true)
+            }
             fetchCurrentLocation()
+        } else {
+            _uiState.update {
+                it.copy(
+                    hasLocationPermission = false,
+                    currentLocation = null
+                )
+            }
         }
     }
 

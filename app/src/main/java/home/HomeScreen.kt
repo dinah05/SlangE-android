@@ -63,23 +63,44 @@ fun HomeScreen(
     val context = LocalContext.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        viewModel.onLocationPermissionResult(granted)
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+
+        val hasFine =
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+
+        val hasCoarse =
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        viewModel.onLocationPermissionResult(
+            hasFine || hasCoarse
+        )
     }
 
     // 화면 최초 진입 시 1회만 권한 상태를 확인하고 필요하면 요청함
-    // 현재는 기존 동작을 유지한 채 구조만 ViewModel로 분리한 상태
     LaunchedEffect(Unit) {
-        val alreadyGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
 
-        if (alreadyGranted) {
+        val hasFine =
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        val hasCoarse =
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (hasFine || hasCoarse) {
             viewModel.onLocationPermissionResult(true)
         } else {
-            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 
@@ -124,7 +145,11 @@ fun HomeScreen(
 
                     SearchBar()
 
-                    Spacer(modifier = Modifier.height(Dimens.SectionSpacing))
+                    Spacer(
+                        modifier = Modifier.height(
+                            Dimens.SectionSpacing
+                        )
+                    )
 
                     NaverMapView(
                         modifier = Modifier
@@ -132,7 +157,11 @@ fun HomeScreen(
                             .fillMaxWidth()
                     )
 
-                    Spacer(modifier = Modifier.height(Dimens.SectionSpacing))
+                    Spacer(
+                        modifier = Modifier.height(
+                            Dimens.SectionSpacing
+                        )
+                    )
 
                     CategoryChipRow()
                 }

@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withTimeoutOrNull
 
 class LocationProvider(
@@ -25,11 +26,13 @@ class LocationProvider(
                 fusedLocationClient.getCurrentLocation(
                     Priority.PRIORITY_BALANCED_POWER_ACCURACY,
                     cancellationTokenSource.token
-                ).await()
+                ).await(cancellationTokenSource)
             }
         } catch (e: SecurityException) {
             logError("위치 권한 없이 호출됨", e)
             null
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logError("위치 조회 실패", e)
             null
