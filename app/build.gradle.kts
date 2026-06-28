@@ -9,6 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        manifestPlaceholders["NCP_KEY_ID"] = project.findProperty("NCP_KEY_ID") as? String ?: ""
         applicationId = "com.slangmap.app"
         minSdk = 26
         targetSdk = 36
@@ -50,6 +51,9 @@ dependencies {
 
     // 네이버 지도 SDK
     implementation("com.naver.maps:map-sdk:3.23.2")
+
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

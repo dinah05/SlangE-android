@@ -1,10 +1,13 @@
 package com.slangmap.app.presentation.home
 
-import androidx.compose.foundation.background
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,12 +26,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.naver.maps.map.MapView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slangmap.app.presentation.home.model.HomeUiState
-import com.slangmap.app.presentation.home.NaverMapView
 
 private object Dimens {
 
@@ -49,9 +56,32 @@ private object Dimens {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    uiState: HomeUiState,
     onStoreClick: (Long) -> Unit,
+    viewModel: HomeViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        viewModel.onLocationPermissionResult(granted)
+    }
+
+    // 화면 최초 진입 시 1회만 권한 상태를 확인하고 필요하면 요청함
+    // 현재는 기존 동작을 유지한 채 구조만 ViewModel로 분리한 상태
+    LaunchedEffect(Unit) {
+        val alreadyGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (alreadyGranted) {
+            viewModel.onLocationPermissionResult(true)
+        } else {
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
     val scaffoldState = rememberBottomSheetScaffoldState()
 
@@ -94,11 +124,7 @@ fun HomeScreen(
 
                     SearchBar()
 
-                    Spacer(
-                        modifier = Modifier.height(
-                            Dimens.SectionSpacing
-                        )
-                    )
+                    Spacer(modifier = Modifier.height(Dimens.SectionSpacing))
 
                     NaverMapView(
                         modifier = Modifier
@@ -106,11 +132,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(
-                            Dimens.SectionSpacing
-                        )
-                    )
+                    Spacer(modifier = Modifier.height(Dimens.SectionSpacing))
 
                     CategoryChipRow()
                 }
@@ -120,37 +142,12 @@ fun HomeScreen(
 }
 
 @Composable
-private fun MapPlaceholder(
-    modifier: Modifier = Modifier
-) {
-
-    Box(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-
-        // TODO(#NAVER_MAP): Naver Map SDK 적용할 예정
-
-        Text(
-            text = "지도 영역"
-        )
-    }
-}
-
-@Composable
 private fun SheetDragHandle() {
 
     HorizontalDivider(
         modifier = Modifier
-            .padding(
-                vertical = Dimens.SheetDragHandlePadding
-            )
-            .width(
-                Dimens.SheetDragHandleWidth
-            ),
+            .padding(vertical = Dimens.SheetDragHandlePadding)
+            .width(Dimens.SheetDragHandleWidth),
         thickness = Dimens.SheetDragHandleHeight
     )
 }
@@ -164,9 +161,7 @@ private fun StoreListSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = Dimens.ScreenPadding
-            )
+            .padding(horizontal = Dimens.ScreenPadding)
     ) {
 
         when {
@@ -182,12 +177,8 @@ private fun StoreListSheetContent(
             else -> {
 
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(
-                        Dimens.ListItemSpacing
-                    ),
-                    contentPadding = PaddingValues(
-                        bottom = Dimens.ScreenPadding
-                    )
+                    verticalArrangement = Arrangement.spacedBy(Dimens.ListItemSpacing),
+                    contentPadding = PaddingValues(bottom = Dimens.ScreenPadding)
                 ) {
 
                     items(
@@ -197,9 +188,7 @@ private fun StoreListSheetContent(
 
                         StoreCard(
                             store = store,
-                            onClick = {
-                                onStoreClick(store.id)
-                            }
+                            onClick = { onStoreClick(store.id) }
                         )
                     }
                 }
@@ -210,18 +199,14 @@ private fun StoreListSheetContent(
 
 @Composable
 private fun LoadingContent() {
-
     StateContentContainer {
-
         CircularProgressIndicator()
     }
 }
 
 @Composable
 private fun EmptyContent() {
-
     StateContentContainer {
-
         Text(
             text = "주변에 등록된 가게가 없어요",
             style = MaterialTheme.typography.bodyMedium,
@@ -234,13 +219,10 @@ private fun EmptyContent() {
 private fun StateContentContainer(
     content: @Composable () -> Unit
 ) {
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(
-                Dimens.StateContentHeight
-            ),
+            .height(Dimens.StateContentHeight),
         contentAlignment = Alignment.Center
     ) {
         content()
