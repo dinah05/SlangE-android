@@ -11,22 +11,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.naver.maps.map.MapView
 
-/**
- * 네이버 지도 Composable
- *
- * [수정 이유]
- *
- * - 기존 코드는 onCreate/onStart/onResume만 호출하고 종료 생명주기를 처리하지 않아
- *   MapView 내부 GL 컨텍스트, 네트워크 연결 등이 해제되지 않아 메모리 누수가 발생했음.
- *
- * [해결 방법]
- *
- * - remember로 MapView 인스턴스를 단일 생성 (recomposition 시 재생성 방지)
- *
- * - DisposableEffect + LifecycleEventObserver로 전체 생명주기 위임
- *
- * - onDispose에서 observer 제거 및 MapView.onDestroy() 보장
- */
 @Composable
 fun NaverMapView(
     modifier: Modifier = Modifier
